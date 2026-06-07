@@ -28,7 +28,6 @@
             }
         }
 
-        /* Kinetic Typography & Animation States */
         .reveal-text {
             opacity: 0;
             transform: translateY(20px) scale(0.98);
@@ -69,7 +68,6 @@
     <div id="app" class="w-full max-w-4xl px-8 relative">
         <div class="main-container text-center space-y-12">
             
-            <!-- Initial Headline -->
             <h1 class="reveal-text text-4xl md:text-5xl lg:text-6xl font-semibold tracking-tight leading-[1.1] max-w-3xl mx-auto text-[#13044f]">
                 I am your <span class="text-accent">AI assistant</span>. <br class="hidden md:block">
                 <span class="opacity-50">Where should we begin?</span>
@@ -79,10 +77,8 @@
                 Drop a document for structure analysis, or describe your situation for a tailored notary solution.
             </p>
 
-            <!-- Action Blocks -->
             <div class="action-blocks grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
                 
-                <!-- Block 1: Drop Zone -->
                 <div id="drop-zone" class="premium-card group cursor-pointer flex flex-col items-center justify-center text-center space-y-4 border-dashed border-2 border-[#13044f]/10 hover:border-[#501dff]/50">
                     <input type="file" id="file-input" class="hidden" accept="application/pdf">
                     <div class="w-12 h-12 rounded-full bg-[#501dff]/10 flex items-center justify-center group-hover:scale-110 transition-transform duration-500">
@@ -96,7 +92,6 @@
                     </div>
                 </div>
 
-                <!-- Block 2: Describe Situation -->
                 <div class="premium-card flex flex-col space-y-4 text-left items-start focus-within:ring-2 focus-within:ring-[#501dff]/20">
                     <div class="w-full flex justify-between items-center">
                         <h3 class="text-lg font-medium text-[#13044f]">Describe situation</h3>
@@ -111,7 +106,6 @@
 
             </div>
 
-            <!-- Results Section (Initially Hidden) -->
             <div id="results" class="hidden space-y-6 pt-8 text-left max-w-2xl mx-auto">
                 <div class="premium-card bg-[#501dff]/5 border-[#501dff]/10">
                     <h2 class="text-xl font-semibold text-[#13044f] flex items-center">
@@ -121,7 +115,6 @@
                     <div class="mt-4 space-y-2">
                         <p class="text-[#13044f]/60">Predicted Destination Country: <span id="res-country" class="font-bold text-[#13044f]">...</span></p>
                         <div id="products-list" class="space-y-3 mt-4">
-                            <!-- Products will be injected here -->
                         </div>
                     </div>
                 </div>
@@ -139,12 +132,10 @@
             const resCountry = document.getElementById('res-country');
             const productsList = document.getElementById('products-list');
             
-            // Phase 1: Reveal Headline
             setTimeout(() => {
                 body.classList.add('is-loaded');
             }, 300);
 
-            // Phase 2: Transition to Action Blocks
             setTimeout(() => {
                 body.classList.add('is-transitioned');
             }, 1200);
@@ -200,7 +191,6 @@
                     productsList.innerHTML += '<p class="text-sm text-[#13044f]/40">No specific products found for this country.</p>';
                 }
 
-                // Smooth scroll to results
                 resultsSection.scrollIntoView({ behavior: 'smooth' });
             }
         });

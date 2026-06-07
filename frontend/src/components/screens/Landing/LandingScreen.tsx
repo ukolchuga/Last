@@ -6,7 +6,6 @@ export function LandingScreen({ onBook }: { onBook: () => void }) {
       id="landing-screen"
       className="notarity-gradient w-full min-h-screen flex flex-col"
     >
-      {/* Nav */}
       <header className="w-full px-6 md:px-12 py-6 flex items-center justify-between max-w-[1400px] mx-auto">
         <Logo />
         <nav className="hidden md:flex items-center gap-10 text-ink/80 font-medium">
@@ -23,7 +22,6 @@ export function LandingScreen({ onBook }: { onBook: () => void }) {
         </div>
       </header>
 
-      {/* Hero */}
       <main className="flex-1 flex flex-col items-center text-center px-6 pt-12 md:pt-20">
         <p className="text-ink tracking-[0.3em] text-sm font-semibold">
           ANYWHERE &amp; ANYTIME
@@ -41,9 +39,7 @@ export function LandingScreen({ onBook }: { onBook: () => void }) {
           <button className="btn-outline">Book a Demo</button>
         </div>
 
-        {/* Hero visual */}
         <div className="mt-16 relative w-full max-w-3xl h-[340px] md:h-[420px] mx-auto">
-          {/* Calendar card */}
           <div className="absolute left-1/2 -translate-x-[140%] top-0 w-64 rounded-2xl bg-white shadow-2xl p-4 rotate-[-6deg]">
             <div className="flex items-center justify-between mb-3">
               <div className="h-2 w-12 rounded bg-gray-200" />
@@ -67,7 +63,6 @@ export function LandingScreen({ onBook }: { onBook: () => void }) {
             <div className="mt-3 h-8 rounded-lg bg-[#501dff]/10" />
           </div>
 
-          {/* Phone 1 */}
           <div className="absolute left-1/2 -translate-x-1/2 top-4 w-[200px] h-[400px] rounded-[36px] bg-ink shadow-2xl p-2 rotate-[-3deg]">
             <div className="w-full h-full rounded-[30px] bg-white p-4 flex flex-col">
               <div className="text-[10px] font-bold text-ink leading-tight uppercase">
@@ -81,7 +76,6 @@ export function LandingScreen({ onBook }: { onBook: () => void }) {
             </div>
           </div>
 
-          {/* Phone 2 */}
           <div className="absolute left-1/2 translate-x-[10%] top-10 w-[200px] h-[400px] rounded-[36px] bg-ink shadow-2xl p-2 rotate-[6deg]">
             <div className="w-full h-full rounded-[30px] bg-white p-3 flex flex-col gap-3">
               <div className="h-28 rounded-xl bg-gradient-to-br from-[#501dff]/20 to-[#501dff]/5 flex items-center justify-center">

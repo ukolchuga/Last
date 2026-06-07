@@ -71,7 +71,6 @@ export function useChatLogic(initialUserMsg?: string, initialFile?: File) {
   const revealRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const initialisedRef = useRef(false);
 
-  // API Calls
   async function fetchCountries() {
     try {
       const response = await fetch(`http://${window.location.hostname}:3000/api/countries`);

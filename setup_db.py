@@ -4,7 +4,6 @@ def setup_database():
     conn = sqlite3.connect('notarity.db')
     cursor = conn.cursor()
 
-    # Create Countries table
     cursor.execute('''
     CREATE TABLE IF NOT EXISTS countries (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -12,7 +11,6 @@ def setup_database():
     )
     ''')
 
-    # Create Services table
     cursor.execute('''
     CREATE TABLE IF NOT EXISTS services (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -21,7 +19,6 @@ def setup_database():
     )
     ''')
 
-    # Create Junction Table (M:N Relationship)
     cursor.execute('''
     CREATE TABLE IF NOT EXISTS country_services (
         country_id INTEGER,
@@ -32,7 +29,6 @@ def setup_database():
     )
     ''')
 
-    # Clear any existing data if the tables already existed
     cursor.execute('DELETE FROM country_services')
     cursor.execute('DELETE FROM countries')
     cursor.execute('DELETE FROM services')

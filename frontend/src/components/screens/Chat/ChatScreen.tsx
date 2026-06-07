@@ -81,7 +81,6 @@ export function ChatScreen({
     >
       {chat.isFinished && <SuccessOverlay onBack={onBack} />}
 
-      {/* Header */}
       <div className="flex-shrink-0 w-full px-6 py-6 flex items-center justify-between z-10 backdrop-blur-md bg-white/20 border-b border-white/10">
         <button onClick={onBack} aria-label="Back to home" className="transition hover:opacity-80">
           <Logo />
@@ -89,10 +88,8 @@ export function ChatScreen({
         <div className="w-10" />
       </div>
 
-      {/* Messages */}
       <MessageList messages={chat.messages} rendered={rendered} parseContent={parseContent} />
 
-      {/* Bottom Sticky Area */}
       <div className="flex-shrink-0 w-full max-w-2xl mx-auto px-6 pb-12 space-y-4">
         <input 
           type="file" 
