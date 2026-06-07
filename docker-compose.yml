@@ -23,9 +23,7 @@ services:
     restart: always
 
   frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
+    build: ./frontend
     container_name: notarity-frontend
     env_file:
       - .env
