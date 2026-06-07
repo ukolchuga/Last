@@ -18,9 +18,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy the rest of the application code
 COPY . .
 
-# Ensure the database exists or will be created
-# RUN python setup_db.py && python populate_db.py
-
 # Expose the port the app runs on
 EXPOSE 3000
 
@@ -28,5 +25,8 @@ EXPOSE 3000
 ENV PYTHONUNBUFFERED=1
 ENV PORT=3000
 
-# Run the application
-CMD ["python", "main.py"]
+# Make start script executable
+RUN chmod +x start.sh
+
+# Run the application using the start script
+CMD ["./start.sh"]

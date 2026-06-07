@@ -152,7 +152,7 @@
                 formData.append('file', file);
 
                 try {
-                    const response = await fetch('http://' + window.location.hostname + ':3000/ai/analyze-document', {
+                    const response = await fetch('/ai/analyze-document', {
                         method: 'POST',
                         body: formData
                     });
