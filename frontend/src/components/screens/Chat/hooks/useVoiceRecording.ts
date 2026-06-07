@@ -24,7 +24,7 @@ export function useVoiceRecording(billingData: any, setBillingData: (data: any) 
         formData.append("file", audioBlob, "voice.wav");
 
         try {
-          const response = await fetch(`http://${window.location.hostname}:3000/ai/process-voice`, {
+          const response = await fetch(`/ai/process-voice`, {
             method: "POST",
             body: formData,
           });

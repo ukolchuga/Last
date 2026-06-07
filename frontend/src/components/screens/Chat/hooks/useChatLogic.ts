@@ -74,7 +74,7 @@ export function useChatLogic(initialUserMsg?: string, initialFile?: File) {
   // API Calls
   async function fetchCountries() {
     try {
-      const response = await fetch(`http://${window.location.hostname}:3000/api/countries`);
+      const response = await fetch(`/api/countries`);
       const data = await response.json();
       setAllCountries(data);
     } catch (error) {
@@ -84,7 +84,7 @@ export function useChatLogic(initialUserMsg?: string, initialFile?: File) {
 
   async function fetchServices(country: string) {
     try {
-      const response = await fetch(`http://${window.location.hostname}:3000/api/services?country=${country}`);
+      const response = await fetch(`/api/services?country=${country}`);
       const data = await response.json();
       setProducts(data);
     } catch (error) {
@@ -99,7 +99,7 @@ export function useChatLogic(initialUserMsg?: string, initialFile?: File) {
         content: m.content
       }));
 
-      const response = await fetch(`http://${window.location.hostname}:3000/ai/chat`, {
+      const response = await fetch(`/ai/chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ 
@@ -130,7 +130,7 @@ export function useChatLogic(initialUserMsg?: string, initialFile?: File) {
       setHasFile(true);
       const formData = new FormData();
       formData.append("file", file);
-      const response = await fetch(`http://${window.location.hostname}:3000/ai/analyze-document`, {
+      const response = await fetch(`/ai/analyze-document`, {
         method: "POST",
         body: formData,
       });
