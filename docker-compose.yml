@@ -1,8 +1,24 @@
 services:
   api:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: notarity-api
     ports:
       - "3000:3000"
+    env_file:
+      - .env
+    volumes:
+      - ./notarity.db:/app/notarity.db
+    restart: always
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: notarity-frontend
+    ports:
+      - "80:3000"
     env_file:
       - .env
     restart: always
