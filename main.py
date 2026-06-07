@@ -14,7 +14,6 @@ load_dotenv()
 
 app = FastAPI()
 
-# CORS configuration
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -64,7 +63,6 @@ def get_services_from_db(country_name: str):
         conn = sqlite3.connect(DB_PATH)
         cursor = conn.cursor()
 
-        # SQL to find services for a given country name (case-insensitive)
         query = """
         SELECT s.type, s.description
         FROM services s
@@ -97,8 +95,6 @@ async def get_countries():
 @app.get("/api/services")
 async def get_services(country: str):
     return get_services_from_db(country)
-
-# --- STUBS ---
 
 @app.get("/booking-form/slug")
 async def get_booking_form():
@@ -135,12 +131,9 @@ async def process_voice(file: UploadFile = File(...)):
         raise HTTPException(status_code=500, detail="ElevenLabs API Key not configured.")
 
     try:
-        # 1. Speech-to-Text via ElevenLabs
         audio_content = await file.read()
         
         async with httpx.AsyncClient() as client:
-            # Note: ElevenLabs STT API endpoint might vary, 
-            # using scribe_v1 model as a standard for their STT service.
             response = await client.post(
                 "https://api.elevenlabs.io/v1/speech-to-text",
                 headers={"xi-api-key": ELEVENLABS_API_KEY},
@@ -155,7 +148,6 @@ async def process_voice(file: UploadFile = File(...)):
             transcription = response.json().get("text", "")
             print(f"Transcribed voice: {transcription}")
 
-        # 2. Data Extraction via Gemini
         extraction_prompt = (
             "You are a data extraction expert. Extract billing and contact information from the provided transcribed text. "
             "Return ONLY a JSON object with these keys: "
@@ -176,8 +168,6 @@ async def process_voice(file: UploadFile = File(...)):
         print(f"Error processing voice: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
-# --- AI LOGIC ---
-
 @app.post("/ai/analyze-document")
 async def analyze_document(file: UploadFile = File(...)):
     if not file.filename.endswith('.pdf'):
@@ -186,7 +176,6 @@ async def analyze_document(file: UploadFile = File(...)):
     try:
         content = await file.read()
         
-        # Get all possible services to help Gemini suggest
         conn = sqlite3.connect(DB_PATH)
         cursor = conn.cursor()
         cursor.execute("SELECT DISTINCT type, description FROM services")
@@ -195,7 +184,6 @@ async def analyze_document(file: UploadFile = File(...)):
 
         services_desc_str = "\n".join([f"- {s['title']}: {s['description']}" for s in all_services])
 
-        # Prepare Gemini prompt
         prompt = (
             "Analyze this document and determine the destination country for notarization. "
             "The 'destination country' is the country where the notarized document will be physically used or submitted (e.g., for a bank, embassy, or local authority).\n\n"
@@ -208,7 +196,6 @@ async def analyze_document(file: UploadFile = File(...)):
             "If unsure about the country, suggest the most likely one and explain your uncertainty."
         )
 
-        # Call Gemini
         response = model.generate_content([
             prompt,
             {
@@ -217,7 +204,6 @@ async def analyze_document(file: UploadFile = File(...)):
             }
         ])
 
-        # Parse Gemini response
         text = response.text.replace("```json", "").replace("```", "").strip()
         ai_result = json.loads(text)
         country = ai_result.get("destinationCountry")
@@ -227,10 +213,8 @@ async def analyze_document(file: UploadFile = File(...)):
         print(f"AI predicted country: {country}")
         print(f"AI recommended services: {recommended_titles}")
 
-        # Fetch all services for the country
         all_country_services = get_services_from_db(country)
 
-        # Filter by recommendations if any
         products = []
         if recommended_titles:
             service_map = {s["title"]: s for s in all_country_services}
@@ -238,7 +222,6 @@ async def analyze_document(file: UploadFile = File(...)):
                 if title in service_map:
                     products.append(service_map[title])
         
-        # Fallback: if no recommendations or none matched, return all services for country
         if not products:
             products = all_country_services
 
@@ -263,11 +246,9 @@ async def chat(data: dict):
         conn = sqlite3.connect(DB_PATH)
         cursor = conn.cursor()
         
-        # Get all services and descriptions
         cursor.execute("SELECT type, description FROM services")
         all_services = [{"title": row[0], "description": row[1]} for row in cursor.fetchall()]
         
-        # Get availability map
         cursor.execute("""
             SELECT c.name, s.type 
             FROM countries c 
@@ -306,7 +287,6 @@ async def chat(data: dict):
             "AVAILABILITY BY COUNTRY:\n" + availability_str
         )
 
-        # Build chat history for Gemini
         chat_context = []
         for h in history:
             chat_context.append(h["content"])
@@ -323,20 +303,14 @@ async def chat(data: dict):
 
         products = []
         if country and recommended_titles:
-            # Fetch services for the identified country
             country_services = get_services_from_db(country)
 
-            # Create a map for quick lookup by title
             service_map = {s["title"]: s for s in country_services}
 
-            # Only include services that the AI specifically recommended
             for title in recommended_titles:
                 if title in service_map:
                     products.append(service_map[title])
                 else:
-                    # Fallback: if AI returned a title not exactly matching our DB title, 
-                    # we could do fuzzy matching, but for now we only take exact matches 
-                    # from our known list provided in the prompt.
                     pass
 
         return {
@@ -348,10 +322,9 @@ async def chat(data: dict):
         print(f"Error in chat: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
-# Proxy for products by tag (Legacy, keeping for compatibility if needed elsewhere)
 @app.get("/products/tags")
 async def get_products_by_tags(tags: List[str] = None):
-    return [] # Effectively disabled
+    return [] 
 
 if __name__ == "__main__":
     import uvicorn

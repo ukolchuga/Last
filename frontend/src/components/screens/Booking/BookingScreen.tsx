@@ -65,7 +65,6 @@ export function BookingScreen({
         </p>
 
         <div className="booking-anim-cards mt-6 grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-3xl">
-          {/* Drop a document */}
           <label 
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
@@ -92,7 +91,6 @@ export function BookingScreen({
             />
           </label>
 
-          {/* Describe situation */}
           <div className="rounded-2xl bg-white shadow-sm border border-ink/5 p-6 flex flex-col text-left min-h-[220px]">
             <div className="flex items-center justify-between mb-3">
               <div className="text-ink font-bold text-lg">Describe situation</div>

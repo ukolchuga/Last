@@ -7,22 +7,18 @@ def populate_countries(cursor):
         print(f"Error: {file_path} not found.")
         return []
 
-    # Empty the table and reset sequence
     cursor.execute('DELETE FROM countries')
     cursor.execute('DELETE FROM sqlite_sequence WHERE name="countries"')
     print("Emptied 'countries' table.")
 
-    # Read the countries from the file (one per line)
     with open(file_path, 'r', encoding='utf-8') as f:
         countries = [line.strip() for line in f if line.strip()]
 
-    # Format countries: Capitalize the first letter of each word
     formatted_countries = [c.title() for c in countries]
 
     print(f"Found {len(formatted_countries)} countries in {file_path}. Inserting...")
     cursor.executemany('INSERT INTO countries (name) VALUES (?)', [(c,) for c in formatted_countries])
     
-    # Return mapping of name to id
     cursor.execute('SELECT name, id FROM countries')
     return {name: id for name, id in cursor.fetchall()}
 
@@ -35,20 +31,18 @@ def parse_service_file(file_path):
     with open(file_path, 'r', encoding='utf-8') as f:
         content = f.read().strip()
 
-    # Split by empty lines (one or more)
     blocks = [block.strip() for block in content.split('\n\n') if block.strip()]
     
     for block in blocks:
         lines = [line.strip() for line in block.split('\n') if line.strip()]
         if len(lines) >= 2:
             name = lines[0]
-            description = " ".join(lines[1:]) # Join rest of lines as description
+            description = " ".join(lines[1:]) 
             services.append((name, description))
     
     return services
 
 def populate_services(cursor):
-    # Empty the table and reset sequence
     cursor.execute('DELETE FROM services')
     cursor.execute('DELETE FROM sqlite_sequence WHERE name="services"')
     print("Emptied 'services' table.")
@@ -59,7 +53,6 @@ def populate_services(cursor):
 
     all_services_data = at_data + spain_data + generic_data
 
-    # Avoid duplicates (by name, case-insensitive)
     seen_names = set()
     unique_services = []
     
@@ -72,40 +65,33 @@ def populate_services(cursor):
     print(f"Found {len(unique_services)} unique services. Inserting...")
     cursor.executemany('INSERT INTO services (type, description) VALUES (?, ?)', unique_services)
     
-    # Return mapping of name to id (case-insensitive keys for easier lookup)
     cursor.execute('SELECT type, id FROM services')
     return {name.lower(): id for name, id in cursor.fetchall()}
 
 def populate_country_services(cursor, country_to_id, service_to_id):
-    # Empty the table
     cursor.execute('DELETE FROM country_services')
     print("Emptied 'country_services' table.")
 
-    # Get service names for each group
     at_service_names = [s[0].lower() for s in parse_service_file('service_at.txt')]
     spain_service_names = [s[0].lower() for s in parse_service_file('service_spain.txt')]
     generic_service_names = [s[0].lower() for s in parse_service_file('service.txt')]
 
-    # Get service IDs
     at_service_ids = [service_to_id[name] for name in at_service_names if name in service_to_id]
     spain_service_ids = [service_to_id[name] for name in spain_service_names if name in service_to_id]
     generic_service_ids = [service_to_id[name] for name in generic_service_names if name in service_to_id]
 
     relationships = []
 
-    # Austria
     austria_id = country_to_id.get('Austria')
     if austria_id:
         for s_id in at_service_ids:
             relationships.append((austria_id, s_id))
     
-    # Spain
     spain_id = country_to_id.get('Spain')
     if spain_id:
         for s_id in spain_service_ids:
             relationships.append((spain_id, s_id))
 
-    # All other countries
     for country_name, c_id in country_to_id.items():
         if country_name not in ['Austria', 'Spain']:
             for s_id in generic_service_ids:
@@ -119,7 +105,6 @@ def main():
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
 
-    # Ensure tables exist
     cursor.execute('CREATE TABLE IF NOT EXISTS countries (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL)')
     cursor.execute('CREATE TABLE IF NOT EXISTS services (id INTEGER PRIMARY KEY AUTOINCREMENT, type TEXT NOT NULL, description TEXT)')
     cursor.execute('''
